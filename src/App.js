@@ -1,26 +1,175 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
+import Axios from 'axios';
+import TaskCollection from './compoents/TaskCollection';
+import SubTaskCollection from './compoents/SubTaskCollection';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+
+  state = {
+    chosenTaskIndex: 0,
+    tasks: [],
+    displayNewTaskModal: 'none',
+    showNewSubTaskInput: false,
+    newTaskTitle: ''
+  }
+
+
+  loadDataFromServer() {
+    Axios.get('http://localhost:5000/api/tasks')
+        .then(res => {
+          this.setState({
+            tasks: res.data,
+          })
+        })
+  }
+
+  componentDidMount() {
+    this.loadDataFromServer()
+  }
+
+  selectTask = (index) => {
+    this.setState({chosenTaskIndex: index})
+  }
+
+  onCheckedFunc = (parentTaskId, id) => {
+    let tasks = this.state.tasks
+    let mainTaskIndex;
+    let mainTask;
+    for (let i = 0; i < tasks.length; i++) {
+      if (tasks[i]._id === parentTaskId) {
+        mainTask = tasks[i]
+        mainTaskIndex = i
+        break
+      }
+    }
+
+    for (let i = 0; i < mainTask.subTasks.length; i++) {
+      if (mainTask.subTasks[i]._id === id) {
+        mainTask.subTasks[i].completed = !mainTask.subTasks[i].completed
+        break
+      }
+    }
+
+    tasks[mainTaskIndex] = mainTask
+    this.setState({
+      tasks,
+    })
+  }
+
+  createNewTask(title) {
+    this.setState({newTaskTitle: '', displayNewTaskModal: 'none'})
+
+    let d = new Date()
+    let hours12 = d.getHours() % 12 === 0 ? 12 : d.getHours() % 12
+    let minutes = d.getMinutes().toString()
+    let suffix = d.getHours() > 12 ? 'PM' : 'AM'
+    let creationDate = d.toDateString().slice(4) + ` ${hours12}:${minutes.padStart(2, '0')} ${suffix}`
+    Axios.post(
+        'http://localhost:5000/api/createTask',
+        {title, creationDate}
+    ).then(res => {
+      if (res.status === 200) {
+        this.loadDataFromServer()
+      } else {
+        console.log("Ran into some kind of error!")
+      }
+    })
+  }
+
+  onChangeNewTaskTitle = (e) => {
+    this.setState({
+      newTaskTitle: e.target.value,
+    })
+  }
+
+  render() {
+    return (
+        <div className="App">
+          <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
+          <div className="task-board" style={{
+            borderRadius: '10px 0 0 10px',
+            backgroundColor: 'rgb(60, 15, 114)',
+          }}>
+            <TaskCollection tasks={this.state.tasks} selectTaskFunc={this.selectTask}/>
+
+            {/* Modal for taking new-task title. */}
+            <div className="new-task-modal" style={{display: this.state.displayNewTaskModal}}>
+              <div className="modal-content">
+                <span onClick={() => {
+                  this.setState({
+                    displayNewTaskModal: 'none'
+                  })
+                }}
+                      className="modal-close-button">&times;</span>
+                <div className="modal-container">
+                  <input type="text" className="new-task-title-input" onChange={this.onChangeNewTaskTitle}/>
+                  <button className="new-task-submit-button"
+                          onClick={this.createNewTask.bind(this, this.state.newTaskTitle)}>Save
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className='floating-button' onClick={() => {
+              this.setState({
+                    displayNewTaskModal: 'block'
+                  }
+              )
+            }}>+
+            </div>
+            {/*this.createNewTask.bind(this, "test")*/}
+          </div>
+          <div className="subTask-board" style={{borderRadius: '0 10px 10px 0', backgroundColor: 'white'}}>
+            <SubTaskCollection
+                parentTask={this.state.tasks[this.state.chosenTaskIndex]}
+                onCheckedFunc={this.onCheckedFunc}/>
+            <div className='subTask-item' style={{
+              display: [this.state.showNewSubTaskInput ? 'none' : 'block'],
+              color: '#888888',
+            }} onClick={() => {
+              this.setState({
+                showNewSubTaskInput: !this.state.showNewSubTaskInput
+              })
+            }}>
+              <i className="material-icons">add</i>
+              {' '}Add Task
+            </div>
+            <div style={{display: [this.state.showNewSubTaskInput ? 'block' : 'none'], padding: "10px 20px"}}>
+              <input type='text' style={{
+                marginBottom: '4px',
+                outline: "none",
+                fontSize: '16px',
+              }}/>
+              <br/>
+              <button style={{
+                backgroundColor: "rgb(60, 15, 114)",
+                color: "white",
+                outline: "none",
+                border: "none",
+              }} onClick={() => {
+                this.setState({
+                  showNewSubTaskInput: false
+                })
+              }}>Save
+              </button>
+              <button style={{
+                backgroundColor: "transparent",
+                color: "black",
+                outline: "none",
+                border: "none",
+              }} onClick={() => {
+                this.setState({
+                  showNewSubTaskInput: false
+                })
+              }}>Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+    );
+  }
 }
 
 export default App;

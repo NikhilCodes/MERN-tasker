@@ -1,38 +1,146 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
+
+.subTask-board, .task-board {
+    display: inline-block;
+    height: 60vh;
+    width: 350px;
+    padding: 10px 0;
+    position: relative;
+    overflow-y: scroll;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.task-board {
+    padding: 10px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.subTask-board::-webkit-scrollbar, .task-board::-webkit-scrollbar {
+    width: 0;
+    transform: translateX(50%);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.task-item {
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: rgb(0, 0, 0);
+    border-radius: 7px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
 }
 
-.App-link {
-  color: #61dafb;
+.subTask-item {
+    color: black;
+    padding: 15px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.task-title {
+    font-size: 24px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    color: rgb(55, 0, 184);
+    padding: 10px;
+}
+
+.date-time {
+    color: grey;
+    padding: 2px 10px;
+    font-size: 15px;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+.floating-button {
+    position: absolute;
+    top: 55vh;
+    left: 175px;
+    transform: translateX(-50%);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 35px;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 25px;
+    border: 0;
+    margin: auto;
+    outline: none;
+    background-color: #00b7e7;
+    color: white;
+    cursor: pointer;
+}
+
+.new-task-modal {
+    width: 280px;
+    height: 120px;
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #00a8ff;
+    animation: show-modal-animate 0.5s;
+}
+
+.modal-content {
+    margin: auto;
+    position: relative;
+    padding: 0;
+    outline: 0;
+}
+
+.modal-container {
+    text-align: center;
+    vertical-align: middle;
+    height: 120px;
+    padding: 20px 0;
+}
+
+.modal-close-button {
+    border: none;
+    display: inline-block;
+    padding: 3px 6px;
+    overflow: hidden;
+    text-decoration: none;
+    color: white;
+    background-color: inherit;
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.new-task-title-input {
+    outline: none;
+    border-radius: 10px 0 0 10px;
+    border: none;
+    width: 50%;
+    padding-left: 5px;
+    padding-right: 20px;
+    transform: scale(1.2, 1.2);
+}
+
+.new-task-submit-button {
+    border: none;
+    border-radius: 0 10px 10px 0;
+    background-color: lawngreen;
+    color: indigo;
+    transform: scale(1.2, 1.2);
+    outline: none;
+}
+
+.new-task-submit-button:active {
+    background-color: limegreen;
+}
+
+@keyframes show-modal-animate {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 100%) scale(0, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1, 1);
+    }
 }
