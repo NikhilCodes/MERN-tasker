@@ -1,3 +1,11 @@
+# MERN Tasker
+
+A task managing app based on MERN-stack.
+
+
+**Work in progress. Lacks crucial functionality just for now.**
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
