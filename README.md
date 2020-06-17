@@ -1,3 +1,4 @@
+![MERN Stack Logo](/images/mern-logo.png)
 # MERN Tasker
 
 A task managing app based on MERN-stack.
