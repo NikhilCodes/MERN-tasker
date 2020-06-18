@@ -11,7 +11,8 @@ class App extends Component {
     tasks: [],
     displayNewTaskModal: 'none',
     showNewSubTaskInput: false,
-    newTaskTitle: ''
+    newTaskTitle: '',
+    newSubTaskTitle: '',
   }
 
 
@@ -57,6 +58,10 @@ class App extends Component {
     })
   }
 
+  showServerErrorMsg() {
+    console.log("Ran into some kind of error!")
+  }
+
   createNewTask(title) {
     this.setState({newTaskTitle: '', displayNewTaskModal: 'none'})
 
@@ -72,14 +77,21 @@ class App extends Component {
       if (res.status === 200) {
         this.loadDataFromServer()
       } else {
-        console.log("Ran into some kind of error!")
+        this.showServerErrorMsg()
       }
     })
   }
 
-  onChangeNewTaskTitle = (e) => {
-    this.setState({
-      newTaskTitle: e.target.value,
+  createNewSubTask(id, title) {
+    Axios.post(
+        'http://localhost:5000/api/createSubTask',
+        {id, title}
+    ).then(res => {
+      if (res.status === 200) {
+        this.loadDataFromServer()
+      } else {
+        this.showServerErrorMsg()
+      }
     })
   }
 
@@ -99,12 +111,17 @@ class App extends Component {
               <div className="modal-content">
                 <span onClick={() => {
                   this.setState({
-                    displayNewTaskModal: 'none'
+                    displayNewTaskModal: 'none',
+                    newTaskTitle: ''
                   })
                 }}
                       className="modal-close-button">&times;</span>
                 <div className="modal-container">
-                  <input type="text" className="new-task-title-input" onChange={this.onChangeNewTaskTitle}/>
+                  <input type="text" className="new-task-title-input" onChange={(e) => {
+                    this.setState({
+                      newTaskTitle: e.target.value,
+                    })
+                  }} value={this.state.newTaskTitle}/>
                   <button className="new-task-submit-button"
                           onClick={this.createNewTask.bind(this, this.state.newTaskTitle)}>Save
                   </button>
@@ -137,7 +154,11 @@ class App extends Component {
               {' '}Add Task
             </div>
             <div style={{display: [this.state.showNewSubTaskInput ? 'block' : 'none'], padding: "10px 20px"}}>
-              <input type='text' style={{
+              <input type='text' onChange={(e) => {
+                this.setState({
+                  newSubTaskTitle: e.target.value,
+                })
+              }} value={this.state.newSubTaskTitle} style={{
                 marginBottom: '4px',
                 outline: "none",
                 fontSize: '16px',
@@ -149,8 +170,10 @@ class App extends Component {
                 outline: "none",
                 border: "none",
               }} onClick={() => {
+                this.createNewSubTask(this.state.tasks[this.state.chosenTaskIndex]._id, this.state.newSubTaskTitle)
                 this.setState({
-                  showNewSubTaskInput: false
+                  showNewSubTaskInput: false,
+                  newSubTaskTitle: ''
                 })
               }}>Save
               </button>
@@ -161,7 +184,8 @@ class App extends Component {
                 border: "none",
               }} onClick={() => {
                 this.setState({
-                  showNewSubTaskInput: false
+                  showNewSubTaskInput: false,
+                  newSubTaskTitle: ''
                 })
               }}>Cancel
               </button>

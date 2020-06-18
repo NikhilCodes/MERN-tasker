@@ -36,8 +36,56 @@ app.post('/api/createTask', (req, res) => {
   let creationDate = req.body.creationDate
   let instance = new TaskModel({_id: uuid_v1(), title: title, creationDate: creationDate})
   instance.save((err, task) => {
-    res.status(200).json(task)
+    if (err) {
+      return res.status(404).json({
+        error: 404
+      })
+    }
+    return res.status(200).json(task)
   })
+})
+
+app.post('/api/createSubTask', (req, res) => {
+  let id = req.body.id
+  let title = req.body.title
+  let _subTasks;
+  res.setHeader('Content-Type', 'application/json');
+
+  TaskModel.findById(id, 'title subTasks').exec((err, task) => {
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        error: err,
+      })
+    }
+
+    _subTasks = task.subTasks
+    let updatedInstance = new TaskModel({
+      subTasks: [
+        ..._subTasks,
+        {
+          _id: uuid_v1(),
+          title,
+          completed: false
+        }
+      ]
+    })
+    // Do the upsert, which works like this: If no Task document exists with `id`
+    TaskModel.updateOne({_id: id}, updatedInstance, {upsert: true}, function (err) {
+      if (err) {
+        return res.status(400).json({
+          success: false,
+          error: err,
+        })
+      }
+    })
+
+    return res.status(200).json({
+      success: true
+    })
+  })
+
+
 })
 
 

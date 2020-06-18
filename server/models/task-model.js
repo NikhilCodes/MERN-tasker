@@ -2,9 +2,9 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
 const TaskSchema = new Schema({
-  _id: {type: String, required: true},
-  title: {type: String, required: true},
-  creationDate: {type: String, required: true},
+  _id: {type: String},
+  title: {type: String},
+  creationDate: {type: String},
   subTasks: {
     type: [{
       _id: {type: String, required: true},
