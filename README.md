@@ -6,7 +6,7 @@ A task managing app based on MERN-stack.
 ## Usage
 
 Start the backend server by
-`node server/index.js`
+`node server/index.js`.
 Open another terminal instance,
 and run the frontend web in dev mode
 `npm start`
