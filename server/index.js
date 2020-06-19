@@ -51,7 +51,7 @@ app.post('/api/createSubTask', (req, res) => {
   let _subTasks;
   res.setHeader('Content-Type', 'application/json');
 
-  TaskModel.findById(id, 'title subTasks').exec((err, task) => {
+  TaskModel.findById(id, 'subTasks').exec((err, task) => {
     if (err) {
       return res.status(400).json({
         success: false,
@@ -84,8 +84,43 @@ app.post('/api/createSubTask', (req, res) => {
       success: true
     })
   })
+})
 
 
+app.post('/api/markSubTaskAsDone', (req, res) => {
+  let subTaskId = req.body.subTaskId
+  let parentTaskId = req.body.parentTaskId
+  TaskModel.findById(parentTaskId, 'subTasks').exec((err, task) => {
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        error: err,
+      })
+    }
+
+    let subTasks = task.subTasks
+    for (let i = 0; i < subTasks.length; i++) {
+      if (subTasks[i]._id === subTaskId) {
+        subTasks[i].completed = !subTasks[i].completed
+        break
+      }
+    }
+
+    let updatedInstance = TaskModel({subTasks})
+    TaskModel.updateOne({_id: parentTaskId}, updatedInstance, {upsert: true}, function (err) {
+      if (err) {
+        return res.status(400).json({
+          success: false,
+          error: err,
+        })
+      }
+    })
+    console.log("Updated")
+
+    return res.status(200).json({
+      success: true
+    })
+  })
 })
 
 

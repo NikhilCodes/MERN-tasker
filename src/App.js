@@ -34,27 +34,18 @@ class App extends Component {
   }
 
   onCheckedFunc = (parentTaskId, id) => {
-    let tasks = this.state.tasks
-    let mainTaskIndex;
-    let mainTask;
-    for (let i = 0; i < tasks.length; i++) {
-      if (tasks[i]._id === parentTaskId) {
-        mainTask = tasks[i]
-        mainTaskIndex = i
-        break
+    Axios.post(
+        'http://localhost:5000/api/markSubTaskAsDone',
+        {
+          subTaskId: id,
+          parentTaskId
+        }
+    ).then(res => {
+      if (res.status === 200) {
+        this.loadDataFromServer()
+      } else {
+        this.showServerErrorMsg()
       }
-    }
-
-    for (let i = 0; i < mainTask.subTasks.length; i++) {
-      if (mainTask.subTasks[i]._id === id) {
-        mainTask.subTasks[i].completed = !mainTask.subTasks[i].completed
-        break
-      }
-    }
-
-    tasks[mainTaskIndex] = mainTask
-    this.setState({
-      tasks,
     })
   }
 
