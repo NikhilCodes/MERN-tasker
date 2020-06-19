@@ -3,8 +3,14 @@
 
 A task managing app based on MERN-stack.
 
+## Usage
 
-**Work in progress. Lacks crucial functionality just for now.**
+Start the backend server by
+`node server/index.js`.
+Open another terminal instance,
+and run the frontend web in dev mode
+`npm start`
+
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
