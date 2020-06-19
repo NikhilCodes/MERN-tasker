@@ -107,7 +107,7 @@ app.post('/api/markSubTaskAsDone', (req, res) => {
     }
 
     let updatedInstance = TaskModel({subTasks})
-    TaskModel.updateOne({_id: parentTaskId}, updatedInstance, {upsert: true}, function (err) {
+    TaskModel.updateOne({_id: parentTaskId}, updatedInstance, {upsert: true}, err => {
       if (err) {
         return res.status(400).json({
           success: false,
@@ -115,8 +115,22 @@ app.post('/api/markSubTaskAsDone', (req, res) => {
         })
       }
     })
-    console.log("Updated")
 
+    return res.status(200).json({
+      success: true
+    })
+  })
+})
+
+app.post('/api/removeTask', (req, res) => {
+  let id = req.body.id
+  TaskModel.findByIdAndRemove(id).exec((err) => {
+    if (err) {
+      return res.status(400).json({
+        success: false,
+        error: err,
+      })
+    }
     return res.status(200).json({
       success: true
     })

@@ -53,7 +53,7 @@ class App extends Component {
     console.log("Ran into some kind of error!")
   }
 
-  createNewTask(title) {
+  createNewTask = (title) => {
     this.setState({newTaskTitle: '', displayNewTaskModal: 'none'})
 
     let d = new Date()
@@ -66,6 +66,9 @@ class App extends Component {
         {title, creationDate}
     ).then(res => {
       if (res.status === 200) {
+        this.setState({
+          chosenTaskIndex: this.state.tasks.length
+        })
         this.loadDataFromServer()
       } else {
         this.showServerErrorMsg()
@@ -73,12 +76,30 @@ class App extends Component {
     })
   }
 
-  createNewSubTask(id, title) {
+  createNewSubTask = (id, title) => {
     Axios.post(
         'http://localhost:5000/api/createSubTask',
         {id, title}
     ).then(res => {
       if (res.status === 200) {
+        this.loadDataFromServer()
+      } else {
+        this.showServerErrorMsg()
+      }
+    })
+  }
+
+  removeTask = (id) => {
+    Axios.post(
+        'http://localhost:5000/api/removeTask',
+        {id}
+    ).then(res => {
+      if (res.status === 200) {
+        this.setState({
+          chosenTaskIndex: this.state.chosenTaskIndex !== 0 ? this.state.chosenTaskIndex - 1 : (
+              this.state.tasks.length !== 0 ? this.state.tasks.length - 2 : 0
+          )
+        })
         this.loadDataFromServer()
       } else {
         this.showServerErrorMsg()
@@ -119,29 +140,29 @@ class App extends Component {
                 </div>
               </div>
             </div>
-
-            <div className='floating-button' onClick={() => {
-              this.setState({
-                    displayNewTaskModal: 'block'
-                  }
-              )
-            }}>+
-            </div>
-            {/*this.createNewTask.bind(this, "test")*/}
+          </div>
+          <div className='floating-button' onClick={() => {
+            this.setState({
+                  displayNewTaskModal: 'block'
+                }
+            )
+          }}>+
           </div>
           <div className="subTask-board" style={{borderRadius: '0 10px 10px 0', backgroundColor: 'white'}}>
             <SubTaskCollection
                 parentTask={this.state.tasks[this.state.chosenTaskIndex]}
-                onCheckedFunc={this.onCheckedFunc}/>
+                onCheckedFunc={this.onCheckedFunc}
+                removeTaskFunc={this.removeTask}
+            />
             <div className='subTask-item' style={{
-              display: [this.state.showNewSubTaskInput ? 'none' : 'block'],
+              display: [this.state.showNewSubTaskInput || this.state.tasks.length === 0 ? 'none' : 'block'],
               color: '#888888',
             }} onClick={() => {
               this.setState({
                 showNewSubTaskInput: !this.state.showNewSubTaskInput
               })
             }}>
-              <i className="material-icons">add</i>
+              <i className="material-icons">edit</i>
               {' '}Add Task
             </div>
             <div style={{display: [this.state.showNewSubTaskInput ? 'block' : 'none'], padding: "10px 20px"}}>

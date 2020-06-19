@@ -51,8 +51,8 @@
 
 .floating-button {
     position: absolute;
-    top: 55vh;
-    left: 175px;
+    top: 85%;
+    left: 27%;
     transform: translateX(-50%);
     font-family: 'Quicksand', sans-serif;
     font-size: 35px;

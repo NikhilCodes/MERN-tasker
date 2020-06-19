@@ -27,7 +27,13 @@ class SubTaskCollection extends Component {
           <div className="task-title">
             {this.props.parentTask.title}
           </div>
-          <div className="date-time">{this.props.parentTask.creationDate}</div>
+          <div className="date-time">
+            {this.props.parentTask.creationDate}
+            <span onClick={this.props.removeTaskFunc.bind(this, this.props.parentTask._id)}><i className="material-icons" style={{
+              float: "right",
+              cursor: "pointer"
+            }}>delete</i></span>
+          </div>
           <hr style={{backgroundColor: "rgb(173, 173, 173)"}}/>
           {this.props.parentTask.subTasks.map(task =>
               (<SubTaskItem
