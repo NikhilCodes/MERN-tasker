@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Axios from 'axios';
-import TaskCollection from './compoents/TaskCollection';
-import SubTaskCollection from './compoents/SubTaskCollection';
+import TaskCollection from './components/TaskCollection';
+import SubTaskCollection from './components/SubTaskCollection';
 import './App.css';
 
 class App extends Component {
