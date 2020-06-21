@@ -12,6 +12,11 @@ and run the frontend web in dev mode
 `npm start`
 
 
+## Screenshots
+
+![Ss1](/images/ss1.png)
+![Ss2](/images/ss2.png)
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
