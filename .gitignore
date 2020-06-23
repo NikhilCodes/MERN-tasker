@@ -31,3 +31,4 @@ build/precache-manifest.2d649ab1e9c5612c95fa4cebb119bd31.js
 build/robots.txt
 build/service-worker.js
 build/static
+server/node_modules
