@@ -1,4 +1,3 @@
-//const uuid_v4 = require('uuid').v4;
 const express = require('express')
 const cors = require('cors')
 const uuid_v1 = require('uuid').v1
@@ -17,7 +16,13 @@ mongoose.connect(
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
+app.use(express.static('public'))
+app.use(express.static('build'))
 app.use(cors())
+
+app.get('/', (req, res) => {
+	res.sendFile('/build/index.html')
+})
 
 app.get('/api/tasks', (req, res) => {
   TaskModel.find().exec((err, tasks) => {
@@ -139,6 +144,7 @@ app.post('/api/removeTask', (req, res) => {
 
 
 app.listen(apiPort)
+console.log(`Server started hosting at http://localhost:${apiPort}`)
 
 /////    Dummy JSON
 // [

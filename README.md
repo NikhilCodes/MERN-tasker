@@ -5,12 +5,10 @@ A task managing app based on MERN-stack.
 
 ## Usage
 
-Start the backend server by
-`node server/index.js`.
-Open another terminal instance,
-and run the frontend web in dev mode
-`npm start`
-
+First create deployable build by,
+`npm run deploy`
+Then run the server by,
+`npm run startall`
 
 ## Screenshots
 

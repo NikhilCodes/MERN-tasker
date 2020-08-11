@@ -17,7 +17,7 @@ class App extends Component {
 
 
   loadDataFromServer() {
-    Axios.get('http://localhost:5000/api/tasks')
+    Axios.get('/api/tasks')
         .then(res => {
           this.setState({
             tasks: res.data,
@@ -35,7 +35,7 @@ class App extends Component {
 
   onCheckedFunc = (parentTaskId, id) => {
     Axios.post(
-        'http://localhost:5000/api/markSubTaskAsDone',
+        '/api/markSubTaskAsDone',
         {
           subTaskId: id,
           parentTaskId
@@ -62,7 +62,7 @@ class App extends Component {
     let suffix = d.getHours() > 12 ? 'PM' : 'AM'
     let creationDate = d.toDateString().slice(4) + ` ${hours12}:${minutes.padStart(2, '0')} ${suffix}`
     Axios.post(
-        'http://localhost:5000/api/createTask',
+        '/api/createTask',
         {title, creationDate}
     ).then(res => {
       if (res.status === 200) {
@@ -78,7 +78,7 @@ class App extends Component {
 
   createNewSubTask = (id, title) => {
     Axios.post(
-        'http://localhost:5000/api/createSubTask',
+        '/api/createSubTask',
         {id, title}
     ).then(res => {
       if (res.status === 200) {
@@ -91,7 +91,7 @@ class App extends Component {
 
   removeTask = (id) => {
     Axios.post(
-        'http://localhost:5000/api/removeTask',
+        '/api/removeTask',
         {id}
     ).then(res => {
       if (res.status === 200) {
